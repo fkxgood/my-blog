@@ -19,9 +19,9 @@ const { title, date, category, tags, description } = frontmatter;
   <!-- 面包屑导航 -->
   <nav class="mb-8 text-sm">
     <div class="flex items-center space-x-3 text-gray-400">
-      <a href="/" class="hover:neon-text transition-all duration-300 font-medium">首页</a>
+      <a href="/my-blog/" class="hover:neon-text transition-all duration-300 font-medium">首页</a>
       <span class="neon-text">•</span>
-      <a href="/categories" class="hover:neon-text transition-all duration-300 font-medium">分类</a>
+      <a href="/my-blog/categories" class="hover:neon-text transition-all duration-300 font-medium">分类</a>
       <span class="neon-text">•</span>
       <span class="neon-text font-bold">{category}</span>
     </div>
@@ -90,7 +90,7 @@ const { title, date, category, tags, description } = frontmatter;
       
       <!-- 文章底部导航 -->
       <div class="mt-8 flex justify-between items-center">
-        <a href="/" class="dark-btn-outline px-6 py-3 rounded-lg text-sm">
+        <a href="/my-blog/" class="dark-btn-outline px-6 py-3 rounded-lg text-sm">
           ← 返回首页
         </a>
         <div class="flex space-x-4">
@@ -151,13 +151,13 @@ const { title, date, category, tags, description } = frontmatter;
         <div class="dark-card p-6 rounded-xl">
           <h3 class="font-bold text-white mb-4 neon-text">相关文章</h3>
           <div class="space-y-4 text-sm">
-            <a href="/posts/typescript-tips" class="block group border border-gray-700/50 rounded-lg p-3 hover:border-neon-green/40 transition-all duration-300">
+            <a href="/my-blog/posts/typescript-tips" class="block group border border-gray-700/50 rounded-lg p-3 hover:border-neon-green/40 transition-all duration-300">
               <span class="text-gray-300 group-hover:neon-text transition-all duration-300 font-medium">
                 TypeScript 小技巧
               </span>
               <div class="text-xs text-gray-500 mt-1">编程语言</div>
             </a>
-            <a href="/posts/hello-astro" class="block group border border-gray-700/50 rounded-lg p-3 hover:border-neon-green/40 transition-all duration-300">
+            <a href="/my-blog/posts/hello-astro" class="block group border border-gray-700/50 rounded-lg p-3 hover:border-neon-green/40 transition-all duration-300">
               <span class="text-gray-300 group-hover:neon-text transition-all duration-300 font-medium">
                 Hello Astro
               </span>
