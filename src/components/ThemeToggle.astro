@@ -1,0 +1,40 @@
+<button id="theme-toggle" aria-label="切换暗色模式" class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+  <svg id="icon-sun" class="w-5 h-5 hidden" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 4.5V2m0 20v-2.5m7.778-12.728l1.768-1.768M2.454 21.546l1.768-1.768m0-14.556L2.454 4.454m18.092 16.092l-1.768-1.768M4.5 12H2m20 0h-2.5M6.222 17.778l-1.768 1.768m16.092-18.092l-1.768 1.768" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  <svg id="icon-moon" class="w-5 h-5 hidden" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79Z" />
+  </svg>
+</button>
+
+<script>
+  const button = document.getElementById('theme-toggle');
+  const sun = document.getElementById('icon-sun');
+  const moon = document.getElementById('icon-moon');
+
+  if (button && sun && moon) {
+    const setIcon = (isDark) => {
+      if (isDark) {
+        moon.style.display = 'none';
+        sun.style.display = 'block';
+      } else {
+        sun.style.display = 'none';
+        moon.style.display = 'block';
+      }
+    };
+
+    // 初始
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const stored = localStorage.getItem('theme');
+    let isDark = stored ? stored === 'dark' : prefersDark;
+    document.documentElement.classList.toggle('dark', isDark);
+    setIcon(isDark);
+
+    button.addEventListener('click', () => {
+      isDark = !isDark;
+      document.documentElement.classList.toggle('dark', isDark);
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      setIcon(isDark);
+    });
+  }
+</script> 

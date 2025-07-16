@@ -1,0 +1,116 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Logo from '../components/Logo.astro';
+---
+
+<BaseLayout>
+  <section class="py-16">
+    <div class="text-center mb-12">
+      <h1 class="text-4xl font-black neon-text mb-4">LOGO 设计方案</h1>
+      <p class="description-text text-xl">为 MR.FENG 博客设计的四种Logo方案</p>
+    </div>
+
+    <div class="max-w-4xl mx-auto">
+      <!-- Logo展示区域 -->
+      <div class="dark-card p-8 rounded-xl mb-8">
+        <h2 class="text-2xl font-bold text-white mb-6 text-center">Logo 预览</h2>
+        <div class="flex justify-center">
+          <Logo />
+        </div>
+      </div>
+
+      <!-- Logo方案说明 -->
+      <div class="grid md:grid-cols-2 gap-6">
+        <!-- 方案1 -->
+        <div class="dark-card p-6 rounded-xl">
+          <div class="flex items-center mb-4">
+            <div class="w-8 h-8 rounded-lg bg-neon-green/20 border border-neon-green/40 flex items-center justify-center text-neon-green font-bold text-sm mr-3">1</div>
+            <h3 class="text-lg font-bold text-white">代码风格</h3>
+          </div>
+          <p class="text-gray-300 mb-3">简洁的编程风格设计，使用线条勾勒字母"F"，体现代码的简洁与优雅。</p>
+          <div class="flex gap-2 text-xs">
+            <span class="px-2 py-1 bg-neon-green/20 text-neon-green rounded">简洁</span>
+            <span class="px-2 py-1 bg-neon-blue/20 text-neon-blue rounded">编程</span>
+            <span class="px-2 py-1 bg-neon-red/20 text-neon-red rounded">现代</span>
+          </div>
+        </div>
+
+        <!-- 方案2 -->
+        <div class="dark-card p-6 rounded-xl">
+          <div class="flex items-center mb-4">
+            <div class="w-8 h-8 rounded-lg bg-neon-green/20 border border-neon-green/40 flex items-center justify-center text-neon-green font-bold text-sm mr-3">2</div>
+            <h3 class="text-lg font-bold text-white">六边形科技</h3>
+          </div>
+          <p class="text-gray-300 mb-3">六边形外框设计，体现科技感和未来感，适合技术博客的定位。</p>
+          <div class="flex gap-2 text-xs">
+            <span class="px-2 py-1 bg-neon-green/20 text-neon-green rounded">科技</span>
+            <span class="px-2 py-1 bg-neon-blue/20 text-neon-blue rounded">几何</span>
+            <span class="px-2 py-1 bg-neon-red/20 text-neon-red rounded">未来</span>
+          </div>
+        </div>
+
+        <!-- 方案3 -->
+        <div class="dark-card p-6 rounded-xl">
+          <div class="flex items-center mb-4">
+            <div class="w-8 h-8 rounded-lg bg-neon-green/20 border border-neon-green/40 flex items-center justify-center text-neon-green font-bold text-sm mr-3">3</div>
+            <h3 class="text-lg font-bold text-white">矩阵风格</h3>
+          </div>
+          <p class="text-gray-300 mb-3">像素化的矩阵设计，致敬经典的Matrix风格，适合网络安全主题。</p>
+          <div class="flex gap-2 text-xs">
+            <span class="px-2 py-1 bg-neon-green/20 text-neon-green rounded">矩阵</span>
+            <span class="px-2 py-1 bg-neon-blue/20 text-neon-blue rounded">像素</span>
+            <span class="px-2 py-1 bg-neon-red/20 text-neon-red rounded">安全</span>
+          </div>
+        </div>
+
+        <!-- 方案4 -->
+        <div class="dark-card p-6 rounded-xl">
+          <div class="flex items-center mb-4">
+            <div class="w-8 h-8 rounded-lg bg-neon-green/20 border border-neon-green/40 flex items-center justify-center text-neon-green font-bold text-sm mr-3">4</div>
+            <h3 class="text-lg font-bold text-white">终端风格</h3>
+          </div>
+          <p class="text-gray-300 mb-3">模拟终端窗口的设计，体现程序员的工作环境，富有代码文化气息。</p>
+          <div class="flex gap-2 text-xs">
+            <span class="px-2 py-1 bg-neon-green/20 text-neon-green rounded">终端</span>
+            <span class="px-2 py-1 bg-neon-blue/20 text-neon-blue rounded">命令行</span>
+            <span class="px-2 py-1 bg-neon-red/20 text-neon-red rounded">极客</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 使用说明 -->
+      <div class="dark-card p-6 rounded-xl mt-6">
+        <h3 class="text-lg font-bold text-white mb-4">使用说明</h3>
+        <div class="space-y-3 text-gray-300">
+          <p>• 点击上方数字按钮 1-4 可以切换不同的Logo设计方案</p>
+          <p>• 所有Logo都支持悬停效果和霓虹发光动画</p>
+          <p>• 设计采用SVG格式，确保在任何尺寸下都保持清晰</p>
+          <p>• 所有方案都与网站的暗黑科技主题保持一致</p>
+        </div>
+      </div>
+
+      <!-- 技术特性 -->
+      <div class="dark-card p-6 rounded-xl mt-6">
+        <h3 class="text-lg font-bold text-white mb-4">技术特性</h3>
+        <div class="grid md:grid-cols-2 gap-4 text-sm">
+          <div class="space-y-2">
+            <p class="text-neon-green font-semibold">✓ SVG矢量图形</p>
+            <p class="text-gray-300">无损缩放，高清显示</p>
+          </div>
+          <div class="space-y-2">
+            <p class="text-neon-green font-semibold">✓ CSS动画效果</p>
+            <p class="text-gray-300">流畅的悬停和发光动画</p>
+          </div>
+          <div class="space-y-2">
+            <p class="text-neon-green font-semibold">✓ 响应式设计</p>
+            <p class="text-gray-300">适配各种屏幕尺寸</p>
+          </div>
+          <div class="space-y-2">
+            <p class="text-neon-green font-semibold">✓ 暗黑主题优化</p>
+            <p class="text-gray-300">完美融入网站风格</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout> 

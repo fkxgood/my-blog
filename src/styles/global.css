@@ -1,0 +1,321 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  background: #0a0a0a;
+  color: #ffffff;
+}
+
+/* 暗黑背景 */
+.dark-bg {
+  background: linear-gradient(135deg, #0a0a0a 0%, #121212 50%, #0a0a0a 100%);
+}
+
+/* 网格背景 */
+.grid-bg {
+  background-image: 
+    linear-gradient(rgba(0, 255, 136, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 136, 0.1) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* 霓虹效果 */
+.neon-text {
+  color: #00ff88;
+  text-shadow: 
+    0 0 5px #00ff88,
+    0 0 10px #00ff88,
+    0 0 15px #00ff88,
+    0 1px 3px rgba(0, 0, 0, 0.9);
+}
+
+/* Logo专用增强对比度 */
+.neon-logo {
+  color: #00ffaa !important;
+  text-shadow: 
+    0 0 5px #00ffaa,
+    0 0 10px #00ffaa,
+    0 0 20px #00ffaa,
+    0 2px 4px rgba(0, 0, 0, 0.8),
+    0 0 30px rgba(0, 255, 170, 0.3);
+  font-weight: 900;
+}
+
+.neon-red {
+  color: #ff4757;
+  text-shadow: 
+    0 0 5px #ff4757,
+    0 0 10px #ff4757;
+}
+
+.neon-blue {
+  color: #3742fa;
+  text-shadow: 
+    0 0 5px #3742fa,
+    0 0 10px #3742fa;
+}
+
+.neon-border {
+  border: 1px solid #00ff88;
+  box-shadow: 
+    0 0 10px rgba(0, 255, 136, 0.3),
+    inset 0 0 10px rgba(0, 255, 136, 0.1);
+}
+
+.neon-glow:hover {
+  box-shadow: 
+    0 0 15px #00ff88,
+    0 0 25px #00ff88,
+    0 0 35px #00ff88;
+}
+
+/* 暗黑卡片 */
+.dark-card {
+  background: linear-gradient(135deg, #121212 0%, #1a1a1a 100%);
+  border: 1px solid rgba(0, 255, 136, 0.2);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.dark-card:hover {
+  border-color: #00ff88;
+  box-shadow: 
+    0 0 20px rgba(0, 255, 136, 0.2),
+    inset 0 0 20px rgba(0, 255, 136, 0.05);
+  transform: translateY(-5px);
+}
+
+/* 按钮样式 */
+.dark-btn {
+  background: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%);
+  border: none;
+  color: #0a0a0a;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.dark-btn:hover {
+  background: linear-gradient(135deg, #00cc6a 0%, #00ff88 100%);
+  box-shadow: 
+    0 0 20px rgba(0, 255, 136, 0.4),
+    0 5px 15px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+}
+
+.dark-btn-outline {
+  background: transparent;
+  border: 2px solid #00ff88;
+  color: #00ff88;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.dark-btn-outline:hover {
+  background: #00ff88;
+  color: #0a0a0a;
+  box-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
+}
+
+/* 输入框样式 */
+.dark-input {
+  background: rgba(18, 18, 18, 0.8);
+  border: 1px solid rgba(0, 255, 136, 0.3);
+  color: #ffffff;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  transition: all 0.3s ease;
+}
+
+.dark-input:focus {
+  outline: none;
+  border-color: #00ff88;
+  box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+}
+
+.dark-input::placeholder {
+  color: #666666;
+}
+
+/* 搜索结果样式 */
+#search-results {
+  border: 1px solid rgba(0, 255, 136, 0.3);
+  animation: slideDown 0.3s ease;
+}
+
+#search-results li {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+#search-results li:last-child {
+  border-bottom: none;
+}
+
+@keyframes slideDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 粒子背景 */
+.particles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.6;
+}
+
+.particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: #00ff88;
+  border-radius: 50%;
+  animation: float 8s ease-in-out infinite;
+  box-shadow: 0 0 5px #00ff88;
+}
+
+.particle:nth-child(2n) {
+  background: #ff4757;
+  box-shadow: 0 0 5px #ff4757;
+  animation-delay: -3s;
+}
+
+.particle:nth-child(3n) {
+  background: #3742fa;
+  box-shadow: 0 0 5px #3742fa;
+  animation-delay: -6s;
+}
+
+/* 滚动条 */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #121212;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(45deg, #00ff88, #00cc6a);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(45deg, #00cc6a, #00ff88);
+}
+
+/* 动画 */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+}
+
+@keyframes slideUp {
+  0% { 
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 文字选择 */
+::selection {
+  background: rgba(0, 255, 136, 0.3);
+  color: #ffffff;
+}
+
+/* 高对比度文字覆盖 */
+.text-gray-300 {
+  color: #e5e5e5 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.text-gray-400 {
+  color: #d1d1d1 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.text-gray-500 {
+  color: #b8b8b8 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.text-gray-600 {
+  color: #a3a3a3 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+/* 增强白色文字 */
+.text-white {
+  color: #ffffff !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+}
+
+/* 增强所有正常文字的对比度 */
+p, span, div, li, td {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+/* Logo动画增强 */
+.animate-pulse-neon {
+  animation: pulse-neon 2s ease-in-out infinite;
+}
+
+@keyframes pulse-neon {
+  0%, 100% {
+    box-shadow: 
+      0 0 5px #00ff88,
+      0 0 10px #00ff88,
+      0 0 15px #00ff88;
+  }
+  50% {
+    box-shadow: 
+      0 0 10px #00ff88,
+      0 0 20px #00ff88,
+      0 0 30px #00ff88;
+  }
+}
+
+/* 描述性文字高亮 */
+.description-text {
+  color: #f0f0f0 !important;
+  text-shadow: 
+    0 1px 3px rgba(0, 0, 0, 0.9),
+    0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+/* 代码块样式 */
+pre {
+  background: #0a0a0a !important;
+  border: 1px solid rgba(0, 255, 136, 0.3) !important;
+}
+
+code {
+  background: rgba(0, 255, 136, 0.1) !important;
+  color: #00ff88 !important;
+  border: 1px solid rgba(0, 255, 136, 0.2) !important;
+} 

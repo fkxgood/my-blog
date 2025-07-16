@@ -1,0 +1,132 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// 获取所有文章
+const posts = await Astro.glob('./posts/*.mdx');
+
+// 按分类分组
+/** @type {Record<string, any[]>} */
+const categories = {};
+for (const post of posts) {
+  const category = post.frontmatter.category;
+  if (!categories[category]) {
+    categories[category] = [];
+  }
+  categories[category].push(post);
+}
+
+// 排序分类
+const sortedCategories = Object.entries(categories).sort(([a], [b]) => a.localeCompare(b));
+---
+
+<BaseLayout>
+  <!-- 暗黑页面标题 -->
+  <section class="text-center py-16 mb-12 relative">
+    <!-- 背景效果 -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+      <div class="absolute top-1/4 left-1/4 w-80 h-80 bg-neon-green/5 rounded-full blur-3xl animate-float"></div>
+      <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-neon-blue/5 rounded-full blur-3xl animate-float" style="animation-delay: -3s;"></div>
+    </div>
+    
+    <div class="relative z-10">
+      <h1 class="text-5xl md:text-7xl font-black neon-text mb-6 tracking-wider">
+        CATEGORIES
+      </h1>
+      <p class="text-xl description-text">
+        按主题深度探索技术文章
+      </p>
+    </div>
+  </section>
+
+  <!-- 分类统计 -->
+  <section class="mb-16">
+    <div class="dark-card p-8 rounded-xl">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+        <div class="space-y-2">
+          <div class="text-3xl font-black neon-text">{posts.length}</div>
+          <div class="text-sm text-white uppercase tracking-wider">总文章数</div>
+        </div>
+        <div class="space-y-2">
+          <div class="text-3xl font-black neon-blue">{Object.keys(categories).length}</div>
+          <div class="text-sm text-white uppercase tracking-wider">分类数量</div>
+        </div>
+        <div class="space-y-2">
+          <div class="text-3xl font-black neon-red">
+            {Math.max(...Object.values(categories).map(posts => posts.length))}
+          </div>
+          <div class="text-sm text-white uppercase tracking-wider">最多文章</div>
+        </div>
+        <div class="space-y-2">
+          <div class="text-3xl font-black text-neon-orange">
+            {new Date().getFullYear()}
+          </div>
+          <div class="text-sm text-white uppercase tracking-wider">创建年份</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 分类列表 -->
+  <section>
+    <div class="space-y-12">
+      {sortedCategories.map(([categoryName, categoryPosts], categoryIndex) => (
+        <div class="dark-card p-10 rounded-xl" style={`animation: slideUp 0.6s ease-out ${categoryIndex * 200}ms both;`}>
+          <div class="flex items-center mb-8">
+            <h2 class="text-3xl font-black text-white mr-6">{categoryName}</h2>
+            <span class="px-4 py-2 text-sm font-bold bg-neon-green/20 text-neon-green rounded-full border border-neon-green/40 uppercase tracking-wider">
+              {categoryPosts.length} 篇文章
+            </span>
+            <div class="ml-6 flex-1 h-px bg-gradient-to-r from-neon-green via-neon-blue to-transparent"></div>
+          </div>
+          
+          <div class="grid md:grid-cols-2 gap-8">
+            {categoryPosts
+              .sort((a, b) => new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime())
+              .map((post, postIndex) => (
+                <article class="group" style={`animation: slideUp 0.4s ease-out ${(categoryIndex * 200) + (postIndex * 100) + 400}ms both;`}>
+                  <div class="border border-gray-700/50 rounded-xl p-6 hover:border-neon-green/40 transition-all duration-300 bg-dark-800/30">
+                    <div class="flex items-center gap-4 mb-4">
+                      <time class="text-sm text-white font-mono bg-dark-600/50 px-3 py-1 rounded border border-gray-600/30">
+                        {new Date(post.frontmatter.date).toLocaleDateString('zh-CN')}
+                      </time>
+                      {post.frontmatter.tags && post.frontmatter.tags.length > 0 && (
+                        <div class="flex gap-2">
+                          {post.frontmatter.tags.slice(0, 2).map(tag => (
+                            <span class="px-2 py-1 text-xs bg-dark-600/70 border border-gray-600/50 text-white rounded-full">
+                              #{tag}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    
+                    <h3 class="text-xl font-bold mb-3 text-white group-hover:neon-text transition-all duration-300">
+                      <a href={post.url}>
+                        {post.frontmatter.title}
+                      </a>
+                    </h3>
+                    
+                    <p class="description-text leading-relaxed mb-4 text-sm">
+                      {post.frontmatter.description || '点击探索这篇文章的深度内容...'}
+                    </p>
+                    
+                    <a href={post.url} class="dark-btn px-4 py-2 rounded-lg text-sm inline-block">
+                      阅读文章
+                    </a>
+                  </div>
+                </article>
+              ))
+            }
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- 返回首页 -->
+  <div class="mt-16 text-center">
+    <a href="/" class="dark-btn-outline px-8 py-4 rounded-lg inline-block text-lg">
+      ← 返回首页
+    </a>
+  </div>
+</BaseLayout> 

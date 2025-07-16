@@ -1,0 +1,100 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout>
+  <!-- 暗黑页面标题 -->
+  <section class="text-center py-16 mb-12 relative">
+    <!-- 背景效果 -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+      <div class="absolute top-1/3 left-1/3 w-64 h-64 bg-neon-red/5 rounded-full blur-3xl animate-float"></div>
+      <div class="absolute bottom-1/3 right-1/3 w-80 h-80 bg-neon-blue/5 rounded-full blur-3xl animate-float" style="animation-delay: -3s;"></div>
+    </div>
+    
+    <div class="relative z-10">
+      <h1 class="text-5xl md:text-7xl font-black neon-text mb-6 tracking-wider">
+        ABOUT_ME
+      </h1>
+      <p class="text-xl description-text">
+        关于我
+      </p>
+    </div>
+  </section>
+
+  <!-- 个人简介 -->
+  <section class="mb-16">
+    <div class="dark-card p-10 rounded-xl">
+      <h2 class="text-3xl font-black neon-text mb-8 flex items-center">
+        <span>个人档案</span>
+        <div class="ml-6 flex-1 h-px bg-gradient-to-r from-neon-green via-neon-blue to-transparent"></div>
+      </h2>
+      
+      <div class="grid md:grid-cols-2 gap-10">
+        <div class="space-y-6 description-text leading-relaxed text-lg">
+          <p>
+            你好，我是 <span class="neon-text font-bold">Mr. Feng</span>，一名全栈开发者，专注于探索代码的暗黑艺术和分享深度技术见解。
+          </p>
+          <p>
+            在数字世界的深处，我致力于将复杂的技术概念转化为优雅的代码解决方案，探索前端框架、后端服务、数据库设计等技术领域的奥秘。
+          </p>
+          <p>
+            通过这个暗黑风格的技术博客，我记录学习心得，分享编程智慧，希望能与更多志同道合的开发者进行深度交流。
+          </p>
+        </div>
+        
+        <div class="space-y-4">
+          <div class="flex items-center space-x-4 p-4 bg-dark-600/30 rounded-lg border border-neon-green/20">
+            <div class="w-4 h-4 bg-neon-green rounded-full animate-pulse"></div>
+            <span class="text-white font-medium">位置: 中国</span>
+          </div>
+          <div class="flex items-center space-x-4 p-4 bg-dark-600/30 rounded-lg border border-neon-blue/20">
+            <div class="w-4 h-4 bg-neon-blue rounded-full animate-pulse"></div>
+            <span class="text-white font-medium">专业: 全栈开发</span>
+          </div>
+          <div class="flex items-center space-x-4 p-4 bg-dark-600/30 rounded-lg border border-neon-red/20">
+            <div class="w-4 h-4 bg-neon-red rounded-full animate-pulse"></div>
+            <span class="text-white font-medium">兴趣: 新技术探索</span>
+          </div>
+          <div class="flex items-center space-x-4 p-4 bg-dark-600/30 rounded-lg border border-neon-orange/20">
+            <div class="w-4 h-4 bg-neon-orange rounded-full animate-pulse"></div>
+            <span class="text-white font-medium">状态: 持续进化</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 技能展示 -->
+  <section class="mb-16">
+    <h2 class="text-3xl font-black neon-text mb-12 flex items-center">
+      <span>技能矩阵</span>
+      <div class="ml-6 flex-1 h-px bg-gradient-to-r from-neon-green via-neon-blue to-transparent"></div>
+    </h2>
+    
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {[
+        { category: '网络安全', skills: ['Nuclei', 'FingerprintHub', '漏洞扫描', '渗透测试'], color: 'neon-red' },
+        { category: '后端开发', skills: ['Node.js', 'Python', 'Go', 'PostgreSQL'], color: 'neon-blue' },
+        { category: 'DevOps', skills: ['Docker', 'Kubernetes', 'AWS', 'CI/CD'], color: 'neon-green' },
+        { category: '数据科学', skills: ['Python', 'TensorFlow', 'Jupyter'], color: 'neon-orange' },
+        { category: '工具链', skills: ['Git', 'VSCode', 'Linux', 'Burp Suite'], color: 'neon-purple' }
+      ].map((skillGroup, index) => (
+        <div class="dark-card p-8 rounded-xl group" style={`animation: slideUp 0.6s ease-out ${index * 150}ms both;`}>
+          <h3 class="font-bold text-xl mb-6 text-white group-hover:neon-text transition-all duration-300">
+            {skillGroup.category}
+          </h3>
+          <div class="space-y-3">
+            {skillGroup.skills.map(skill => (
+              <div class="flex items-center space-x-3 p-2 rounded-lg hover:bg-dark-600/30 transition-all duration-300">
+                <div class="w-2 h-2 bg-neon-green rounded-full animate-pulse"></div>
+                <span class="text-white font-medium">{skill}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+
+</BaseLayout> 

@@ -1,0 +1,146 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// 获取所有文章
+const posts = await Astro.glob('./posts/*.mdx');
+
+// 收集所有标签
+/** @type {Record<string, any[]>} */
+const allTags = {};
+for (const post of posts) {
+  if (post.frontmatter.tags) {
+    for (const tag of post.frontmatter.tags) {
+      if (!allTags[tag]) {
+        allTags[tag] = [];
+      }
+      allTags[tag].push(post);
+    }
+  }
+}
+
+// 按文章数量排序标签
+const sortedTags = Object.entries(allTags).sort(([, a], [, b]) => b.length - a.length);
+---
+
+<BaseLayout>
+  <!-- 暗黑页面标题 -->
+  <section class="text-center py-16 mb-12 relative">
+    <!-- 背景效果 -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+      <div class="absolute top-1/3 left-1/3 w-72 h-72 bg-neon-red/5 rounded-full blur-3xl animate-float"></div>
+      <div class="absolute bottom-1/3 right-1/3 w-96 h-96 bg-neon-purple/5 rounded-full blur-3xl animate-float" style="animation-delay: -4s;"></div>
+    </div>
+    
+    <div class="relative z-10">
+      <h1 class="text-5xl md:text-7xl font-black neon-text mb-6 tracking-wider">
+        TAGS
+      </h1>
+      <p class="text-xl description-text">
+        通过标签快速定位相关主题
+      </p>
+    </div>
+  </section>
+
+  <!-- 标签云 -->
+  <section class="mb-16">
+    <div class="dark-card p-10 rounded-xl">
+      <h2 class="text-3xl font-black neon-text mb-8 flex items-center">
+        <span>标签云</span>
+        <div class="ml-6 flex-1 h-px bg-gradient-to-r from-neon-green via-neon-blue to-transparent"></div>
+      </h2>
+      
+      <div class="flex flex-wrap gap-4">
+        {sortedTags.map(([tag, tagPosts], index) => (
+          <a 
+            href={`#tag-${tag}`} 
+            class="group relative"
+            style={`font-size: ${Math.min(1.8, 1 + tagPosts.length * 0.15)}rem; animation: slideUp 0.4s ease-out ${index * 100}ms both;`}
+          >
+            <span class="px-6 py-3 bg-gradient-to-r from-neon-green/10 to-neon-blue/10 border border-neon-green/30 rounded-full text-neon-green hover:bg-gradient-to-r hover:from-neon-green/20 hover:to-neon-blue/20 hover:border-neon-green/50 transition-all duration-300 inline-block group-hover:scale-110 group-hover:neon-glow font-bold">
+              #{tag}
+              <span class="ml-2 text-xs text-white font-mono">({tagPosts.length})</span>
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 按标签分组的文章 -->
+  <section>
+    <div class="space-y-16">
+      {sortedTags.map(([tag, tagPosts], tagIndex) => (
+        <div id={`tag-${tag}`} class="dark-card p-10 rounded-xl" style={`animation: slideUp 0.6s ease-out ${tagIndex * 200}ms both;`}>
+          <div class="flex items-center mb-8">
+            <h2 class="text-3xl font-black text-white mr-6">#{tag}</h2>
+            <span class="px-4 py-2 text-sm font-bold bg-neon-blue/20 text-neon-blue rounded-full border border-neon-blue/40 uppercase tracking-wider">
+              {tagPosts.length} 篇文章
+            </span>
+            <div class="ml-6 flex-1 h-px bg-gradient-to-r from-neon-blue via-neon-green to-transparent"></div>
+          </div>
+          
+          <div class="space-y-6">
+            {tagPosts
+              .sort((a, b) => new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime())
+              .map((post, postIndex) => (
+                <article class="border border-gray-700/50 rounded-xl p-8 hover:border-neon-green/40 transition-all duration-300 group bg-dark-800/20" style={`animation: slideUp 0.4s ease-out ${(tagIndex * 200) + (postIndex * 150) + 400}ms both;`}>
+                  <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                    <div class="flex-1">
+                      <div class="flex items-center gap-4 mb-3">
+                        <span class="px-4 py-2 text-sm font-bold bg-neon-green/20 text-neon-green rounded-full border border-neon-green/40 uppercase tracking-wider">
+                          {post.frontmatter.category}
+                        </span>
+                                        <time class="text-sm text-white font-mono bg-dark-600/50 px-3 py-1 rounded border border-gray-600/30">
+                  {new Date(post.frontmatter.date).toLocaleDateString('zh-CN')}
+                </time>
+                      </div>
+                      
+                      <h3 class="text-2xl font-bold mb-3 text-white group-hover:neon-text transition-all duration-300">
+                        <a href={post.url}>
+                          {post.frontmatter.title}
+                        </a>
+                      </h3>
+                      
+                      <p class="text-gray-300 text-sm leading-relaxed mb-4">
+                        {post.frontmatter.description || '点击探索这篇文章的深度内容...'}
+                      </p>
+                      
+                      {post.frontmatter.tags && (
+                        <div class="flex gap-2 mt-4 flex-wrap">
+                          {post.frontmatter.tags.map(postTag => (
+                            <span 
+                              class={`px-3 py-1 text-xs rounded-full font-medium ${
+                                postTag === tag 
+                                  ? 'bg-neon-green/20 text-neon-green border border-neon-green/40' 
+                                  : 'bg-dark-600/70 border border-gray-600/50 text-gray-400'
+                              }`}
+                            >
+                              #{postTag}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div class="flex-shrink-0">
+                      <a href={post.url} class="dark-btn px-6 py-3 rounded-lg text-sm inline-block">
+                        阅读文章
+                      </a>
+                    </div>
+                  </div>
+                </article>
+              ))
+            }
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- 返回首页 -->
+  <div class="mt-16 text-center">
+    <a href="/" class="dark-btn-outline px-8 py-4 rounded-lg inline-block text-lg">
+      ← 返回首页
+    </a>
+  </div>
+</BaseLayout> 

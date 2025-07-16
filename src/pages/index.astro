@@ -1,0 +1,118 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+const posts = await Astro.glob('./posts/*.mdx');
+const ordered = posts.sort((a, b) =>
+  new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime()
+);
+---
+
+<BaseLayout>
+  <!-- 暗黑英雄区域 -->
+  <section class="text-center py-20 mb-16 relative">
+    <!-- 背景效果 -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+      <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-neon-green/5 rounded-full blur-3xl animate-float"></div>
+      <div class="absolute bottom-1/4 right-1/4 w-80 h-80 bg-neon-red/5 rounded-full blur-3xl animate-float" style="animation-delay: -3s;"></div>
+    </div>
+    
+    <div class="relative z-10">
+      <h1 class="text-6xl md:text-8xl font-black neon-text mb-6 animate-slide-up tracking-wider">
+        MR. FENG
+      </h1>
+      <h2 class="text-2xl md:text-4xl font-bold text-white mb-8 animate-slide-up" style="animation-delay: 200ms;">
+        代码 •安全 • AI
+      </h2>
+      <p class="text-lg md:text-xl description-text max-w-3xl mx-auto mb-12 leading-relaxed animate-slide-up" style="animation-delay: 400ms;">
+        编程不仅是科学，也是艺术。在代码中，我们找到了表达自我和解决问题的新途径。——唐纳德·克努特
+      </p>
+      
+      <div class="flex flex-col sm:flex-row gap-6 justify-center animate-slide-up" style="animation-delay: 600ms;">
+        <a href="#posts" class="dark-btn px-8 py-4 rounded-lg inline-block text-lg">
+          探索文章
+        </a>
+        <a href="/about" class="dark-btn-outline px-8 py-4 rounded-lg inline-block text-lg">
+          了解更多
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 文章列表 -->
+  <section id="posts" class="mb-16">
+    <h2 class="text-3xl md:text-4xl font-black neon-text mb-12 flex items-center">
+      <span>最新发布</span>
+      <div class="ml-6 flex-1 h-px bg-gradient-to-r from-neon-green via-neon-blue to-transparent"></div>
+    </h2>
+    
+    <div class="space-y-8">
+      {ordered.map((post, index) => (
+        <article class="dark-card p-8 rounded-xl group" style={`animation: slideUp 0.6s ease-out ${index * 150}ms both;`}>
+          <div class="flex flex-col lg:flex-row gap-8">
+            <div class="flex-1">
+              <div class="flex items-center gap-4 mb-4">
+                <span class="px-4 py-2 text-sm font-bold bg-neon-green/20 text-neon-green rounded-full border border-neon-green/40 uppercase tracking-wider">
+                  {post.frontmatter.category}
+                </span>
+                <time class="text-sm text-white font-mono bg-dark-600/50 px-3 py-1 rounded border border-gray-600/30">
+                  {new Date(post.frontmatter.date).toLocaleDateString('zh-CN')}
+                </time>
+              </div>
+              
+              <h3 class="text-2xl md:text-3xl font-bold mb-4 text-white group-hover:neon-text transition-all duration-300">
+                <a href={post.url}>
+                  {post.frontmatter.title}
+                </a>
+              </h3>
+              
+              <p class="description-text leading-relaxed mb-6 text-lg">
+                {post.frontmatter.description || '探索这篇文章的深度内容...'}
+              </p>
+              
+              <div class="flex items-center justify-between">
+                <a href={post.url} class="dark-btn px-6 py-3 rounded-lg text-sm">
+                  阅读全文
+                </a>
+                
+                {post.frontmatter.tags && (
+                  <div class="flex gap-2 flex-wrap">
+                    {post.frontmatter.tags.slice(0, 3).map((tag: string) => (
+                      <span class="px-3 py-1 text-xs bg-dark-600/70 border border-gray-600/50 text-white rounded-full">
+                        #{tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+            
+            <!-- 装饰性元素 -->
+            <div class="w-full lg:w-48 h-32 bg-gradient-to-br from-neon-green/10 to-neon-blue/10 rounded-xl border border-neon-green/20 flex items-center justify-center group-hover:border-neon-green/60 transition-all duration-500 group-hover:animate-float">
+              <div class="w-20 h-20 border-2 border-neon-green bg-neon-green/10 rounded-xl flex items-center justify-center group-hover:bg-neon-green/20 transition-all duration-500">
+                <div class="w-8 h-8 bg-neon-green rounded-lg animate-pulse"></div>
+              </div>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- 技术栈展示 */
+  <section class="py-16 border-t border-neon-green/30">
+    <h2 class="text-3xl md:text-4xl font-black neon-text mb-4 text-center">技术矩阵</h2>
+    <p class="description-text text-center mb-12 text-lg">掌握的编程语言与框架生态</p>
+    
+    <div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
+      {['JavaScript', 'TypeScript', 'React', 'Vue', 'Node.js', 'Python', 'Rust', 'Go', 'Docker', 'Kubernetes', 'AWS', 'GraphQL'].map((tech, index) => (
+        <div class="dark-card p-6 rounded-xl text-center group" style={`animation: slideUp 0.4s ease-out ${index * 100}ms both;`}>
+          <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-neon-green/20 to-neon-blue/20 rounded-xl border border-neon-green/30 flex items-center justify-center group-hover:border-neon-green/60 group-hover:animate-float transition-all duration-300">
+            <div class="w-8 h-8 bg-neon-green rounded-lg opacity-70 group-hover:opacity-100 transition-opacity"></div>
+          </div>
+          <span class="text-sm font-semibold text-white group-hover:neon-text transition-all duration-300 uppercase tracking-wider">
+            {tech}
+          </span>
+        </div>
+      ))}
+    </div>
+  </section>
+</BaseLayout> 

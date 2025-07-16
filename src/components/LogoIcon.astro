@@ -1,0 +1,49 @@
+<!-- 代码风格Logo图标 - 基于第一个设计方案 -->
+<svg viewBox="0 0 48 48" class="w-full h-full">
+  <defs>
+    <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00ff88;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3742fa;stop-opacity:1" />
+    </linearGradient>
+    <filter id="logoGlow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- 外框 -->
+  <rect x="2" y="2" width="44" height="44" 
+        fill="none" 
+        stroke="url(#logoGrad)" 
+        stroke-width="2" 
+        rx="8" 
+        filter="url(#logoGlow)"
+        class="group-hover:stroke-width-3 transition-all duration-300"/>
+  
+  <!-- 字母F的代码风格设计 -->
+  <path d="M12 12 L32 12 M12 12 L12 36 M12 24 L28 24" 
+        stroke="#00ff88" 
+        stroke-width="3" 
+        stroke-linecap="round" 
+        fill="none" 
+        filter="url(#logoGlow)"
+        class="group-hover:stroke-white transition-all duration-300"/>
+  
+  <!-- 装饰点 -->
+  <circle cx="36" cy="16" r="2" fill="#00ff88" class="animate-pulse group-hover:fill-white transition-all duration-300"/>
+  <circle cx="36" cy="28" r="1.5" fill="#3742fa" class="animate-pulse group-hover:fill-white transition-all duration-300" style="animation-delay: 0.5s"/>
+</svg>
+
+<style>
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+  
+  .animate-pulse {
+    animation: pulse 2s infinite;
+  }
+</style> 

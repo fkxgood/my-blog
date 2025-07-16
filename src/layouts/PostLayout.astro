@@ -1,0 +1,267 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+export interface Props {
+  frontmatter: {
+    title: string;
+    date: string;
+    category: string;
+    tags?: string[];
+    description?: string;
+  };
+}
+
+const { frontmatter } = Astro.props;
+const { title, date, category, tags, description } = frontmatter;
+---
+
+<BaseLayout>
+  <!-- 面包屑导航 -->
+  <nav class="mb-8 text-sm">
+    <div class="flex items-center space-x-3 text-gray-400">
+      <a href="/" class="hover:neon-text transition-all duration-300 font-medium">首页</a>
+      <span class="neon-text">•</span>
+      <a href="/categories" class="hover:neon-text transition-all duration-300 font-medium">分类</a>
+      <span class="neon-text">•</span>
+      <span class="neon-text font-bold">{category}</span>
+    </div>
+  </nav>
+
+  <!-- 文章头部 -->
+  <header class="mb-12">
+    <div class="dark-card p-10 rounded-xl">
+      <!-- 分类标签 -->
+      <div class="mb-6">
+        <span class="px-4 py-2 text-sm font-bold bg-neon-green/20 text-neon-green rounded-full border border-neon-green/40 uppercase tracking-wider">
+          {category}
+        </span>
+      </div>
+      
+      <!-- 文章标题 -->
+      <h1 class="text-4xl md:text-5xl font-black text-white mb-6 leading-tight">
+        {title}
+      </h1>
+      
+      <!-- 文章描述 -->
+      {description && (
+        <p class="text-xl text-gray-300 mb-8 leading-relaxed">
+          {description}
+        </p>
+      )}
+      
+      <!-- 文章元信息 -->
+      <div class="flex flex-wrap items-center gap-6 text-sm">
+        <div class="flex items-center space-x-3">
+          <div class="w-3 h-3 bg-neon-green rounded-full animate-pulse"></div>
+          <time class="font-mono text-gray-300 bg-dark-600/50 px-3 py-1 rounded">
+            {new Date(date).toLocaleDateString('zh-CN', { 
+              year: 'numeric', 
+              month: 'long', 
+              day: 'numeric' 
+            })}
+          </time>
+        </div>
+        
+        {tags && tags.length > 0 && (
+          <div class="flex items-center space-x-3">
+            <div class="w-3 h-3 bg-neon-blue rounded-full animate-pulse"></div>
+            <div class="flex gap-2 flex-wrap">
+              {tags.map(tag => (
+                <span class="px-3 py-1 bg-dark-600/70 border border-gray-600/50 text-gray-300 rounded-full text-xs font-medium">
+                  #{tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  </header>
+
+  <!-- 文章内容区域 -->
+  <div class="grid lg:grid-cols-4 gap-8">
+    <!-- 主要内容 -->
+    <article class="lg:col-span-3">
+      <div class="dark-card p-10 rounded-xl">
+        <div class="prose prose-invert prose-lg max-w-none">
+          <slot />
+        </div>
+      </div>
+      
+      <!-- 文章底部导航 -->
+      <div class="mt-8 flex justify-between items-center">
+        <a href="/" class="dark-btn-outline px-6 py-3 rounded-lg text-sm">
+          ← 返回首页
+        </a>
+        <div class="flex space-x-4">
+          <button class="dark-btn px-6 py-3 rounded-lg text-sm" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+            ↑ 回到顶部
+          </button>
+        </div>
+      </div>
+    </article>
+    
+    <!-- 侧边栏 -->
+    <aside class="lg:col-span-1">
+      <div class="sticky top-24 space-y-6">
+        <!-- 文章信息卡片 -->
+        <div class="dark-card p-6 rounded-xl">
+          <h3 class="font-bold text-white mb-4 neon-text">文章信息</h3>
+          <div class="space-y-4 text-sm">
+            <div class="flex justify-between items-center">
+              <span class="text-gray-400">发布时间</span>
+              <span class="text-white font-mono">{new Date(date).toLocaleDateString('zh-CN')}</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-gray-400">分类</span>
+              <span class="neon-text font-bold">{category}</span>
+            </div>
+            {tags && tags.length > 0 && (
+              <div>
+                <span class="text-gray-400 block mb-3">标签</span>
+                <div class="flex flex-wrap gap-2">
+                  {tags.map(tag => (
+                    <span class="px-3 py-1 bg-neon-green/20 text-neon-green rounded-full text-xs border border-neon-green/40">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+        
+        <!-- 目录 -->
+        <div class="dark-card p-6 rounded-xl">
+          <h3 class="font-bold text-white mb-4 neon-text">目录</h3>
+          <div class="text-sm space-y-3">
+            <a href="#" class="block text-gray-300 hover:neon-text transition-all duration-300 border-l-2 border-transparent hover:border-neon-green pl-3">
+              • 文章开始
+            </a>
+            <a href="#" class="block text-gray-300 hover:neon-text transition-all duration-300 border-l-2 border-transparent hover:border-neon-green pl-3">
+              • 主要内容
+            </a>
+            <a href="#" class="block text-gray-300 hover:neon-text transition-all duration-300 border-l-2 border-transparent hover:border-neon-green pl-3">
+              • 总结
+            </a>
+          </div>
+        </div>
+        
+        <!-- 相关文章 -->
+        <div class="dark-card p-6 rounded-xl">
+          <h3 class="font-bold text-white mb-4 neon-text">相关文章</h3>
+          <div class="space-y-4 text-sm">
+            <a href="/posts/typescript-tips" class="block group border border-gray-700/50 rounded-lg p-3 hover:border-neon-green/40 transition-all duration-300">
+              <span class="text-gray-300 group-hover:neon-text transition-all duration-300 font-medium">
+                TypeScript 小技巧
+              </span>
+              <div class="text-xs text-gray-500 mt-1">编程语言</div>
+            </a>
+            <a href="/posts/hello-astro" class="block group border border-gray-700/50 rounded-lg p-3 hover:border-neon-green/40 transition-all duration-300">
+              <span class="text-gray-300 group-hover:neon-text transition-all duration-300 font-medium">
+                Hello Astro
+              </span>
+              <div class="text-xs text-gray-500 mt-1">框架</div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</BaseLayout>
+
+<style>
+  /* 自定义 prose 样式 */
+  .prose {
+    color: #ffffff;
+  }
+  
+  .prose h1,
+  .prose h2,
+  .prose h3,
+  .prose h4,
+  .prose h5,
+  .prose h6 {
+    color: #ffffff;
+    font-weight: 700;
+  }
+  
+  .prose h2 {
+    border-bottom: 2px solid rgba(0, 255, 136, 0.3);
+    padding-bottom: 0.75rem;
+    margin-top: 2.5rem;
+    margin-bottom: 1.5rem;
+    color: #00ff88;
+    text-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+  }
+  
+  .prose h3 {
+    color: #00ff88;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .prose a {
+    color: #00ff88;
+    text-decoration: none;
+    text-shadow: 0 0 5px rgba(0, 255, 136, 0.3);
+  }
+  
+  .prose a:hover {
+    color: #ffffff;
+    text-shadow: 0 0 10px #00ff88;
+    text-decoration: underline;
+  }
+  
+  .prose code {
+    background: rgba(0, 255, 136, 0.15);
+    border: 1px solid rgba(0, 255, 136, 0.3);
+    border-radius: 0.375rem;
+    padding: 0.25rem 0.5rem;
+    color: #00ff88;
+    font-size: 0.9em;
+    font-weight: 600;
+  }
+  
+  .prose pre {
+    background: #0a0a0a;
+    border: 1px solid rgba(0, 255, 136, 0.3);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    overflow-x: auto;
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.1);
+  }
+  
+  .prose pre code {
+    background: transparent;
+    border: none;
+    padding: 0;
+    color: #ffffff;
+    text-shadow: none;
+    font-weight: normal;
+  }
+  
+  .prose blockquote {
+    border-left: 4px solid #00ff88;
+    background: rgba(0, 255, 136, 0.05);
+    margin: 1.5rem 0;
+    padding: 1rem 1.5rem;
+    font-style: italic;
+    border-radius: 0 0.5rem 0.5rem 0;
+  }
+  
+  .prose ul li::marker,
+  .prose ol li::marker {
+    color: #00ff88;
+  }
+  
+  .prose strong {
+    color: #ffffff;
+    font-weight: 700;
+  }
+  
+  .prose p {
+    line-height: 1.8;
+    margin-bottom: 1.25rem;
+  }
+</style> 
