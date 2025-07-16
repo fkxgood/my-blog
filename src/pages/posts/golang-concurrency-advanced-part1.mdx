@@ -1,0 +1,359 @@
+---
+title: "Golang高级进阶（一）：进程、线程、并发、并行、goroutine协程"
+date: 2024-01-15
+category: "Go语言"
+tags:
+  - "Go"
+  - "并发编程"
+  - "goroutine"
+  - "进程"
+  - "线程"
+  - "协程"
+---
+
+# Golang高级进阶（一）：进程、线程、并发、并行、goroutine协程
+
+> 重点：这一篇全是干货，一定要多读多记，哪里不会可以留言咨询我。
+
+## 一、关于进程和线程
+
+### 1. 进程（Process）
+
+进程就是程序在操作系统中的一次执行过程，是由系统进行资源分配和调度的基本单位，进程是一个动态概念，是程序在执行过程中分配和管理资源的基本单位，每一个进程都有一个自己的地址空间。一个进程至少有5种基本状态：初始态、执行态、等待状态、就绪状态、终止状态。
+
+**通俗讲：进程就是一个正在执行的程序。**
+
+### 2. 线程
+
+线程是进程的一个执行实例，是程序执行的最小单元，它是比进程更小的能独立运行的基本单位。
+
+**通俗讲：一个进程可以创建多个线程，同一个进程中的多个线程可以并发执行，一个程序要运行的话至少有一个进程。**
+
+## 二、关于并发和并行
+
+### 1. 并发
+
+多个线程同时竞争一个位置，竞争到的才可以执行，每一个时间段只有一个线程在执行。
+
+### 2. 并行
+
+多个线程可以同时执行，每一个时间段，可以有多个线程同时执行。
+
+### 3. 通俗讲
+
+多线程程序在单核cpu上运行就是并发，在多核cpu上运行就是并行。如果线程数大于cpu核数，则多线程程序在多个cpu上既有并发也有并行。
+
+## 三、goroutine协程以及主线程
+
+### 1. 主线程
+
+可以理解为线程或进程，在一个golang程序的主线程上可以启用多个协程。golang中多协程可以实现并发或者并行。
+
+### 2. 协程
+
+可以理解为用户级别的线程，这是对内核透明的，也就是系统并不知道有协程的存在，是完全由用户自己的程序进行调度的。golang的一大特色就是从语言方面原生支持协程，在函数或方法前面加一个go关键词就可以创建一个协程。可以说golang中的协程就是goroutine。
+
+**Golang 中的多协程有点类似其他语言中的多线程。**
+
+### 3. 多协程和多线程
+
+Golang 中每个 goroutine (协程) 默认占用内存远比 Java 、C 的线程少。 OS 线程（操作系统线程）一般都有固定的栈内存（通常为 2MB 左右）,一个 goroutine (协程) 占用内存非常小，只有 2KB 左右，多协程 goroutine 切换调度开销方面远比线程要少。 这也是为什么越来越多的大公司使用 Golang 的原因之一。
+
+## 四、go关键词实操
+
+### 1. 顺序执行
+
+```go
+package main
+
+import "fmt"
+
+func test() {
+	for i := 0; i < 5; i++ {
+		fmt.Println("test执行", i)
+	}
+}
+
+func main() {
+	// 正常顺序执行
+	test()
+	for i := 0; i < 5; i++ {
+		fmt.Println("main执行", i)
+	}
+}
+```
+
+**输出结果：**
+
+```
+test执行 0
+test执行 1
+test执行 2
+test执行 3
+test执行 4
+main执行 0
+main执行 1
+main执行 2
+main执行 3
+main执行 4
+```
+
+### 2. 加入go
+
+```go
+package main
+
+import "fmt"
+
+func test() {
+	for i := 0; i < 5; i++ {
+		fmt.Println("test执行", i)
+	}
+}
+
+func main() {
+	// 加入goroutine后
+	go test()
+	for i := 0; i < 5; i++ {
+		fmt.Println("main执行", i)
+	}
+}
+```
+
+**输出结果：**
+
+```
+main执行 0
+main执行 1
+main执行 2
+main执行 3
+main执行 4
+```
+
+主线程执行完毕后，并没有等待协程的执行。
+
+### 3. 加入时间
+
+```go
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+// 加入时间
+func test1() {
+	for i := 0; i < 5; i++ {
+		fmt.Println("test执行", i)
+		time.Sleep(time.Millisecond * 100)
+	}
+}
+
+func main() {
+	// 加入sleep之后再执行
+	go test1()
+	for i := 0; i < 5; i++ {
+		fmt.Println("main执行", i)
+		time.Sleep(time.Millisecond * 100)
+	}
+}
+```
+
+**输出结果：**
+
+```
+main执行 0
+test执行 0
+test执行 1
+main执行 1
+main执行 2
+test执行 2
+main执行 3
+test执行 3
+test执行 4
+main执行 4
+```
+
+加入相同的睡眠时间后，执行的顺序不一定，但少量数据来看均会执行完毕。
+
+### 4. 主线程执行快的情况
+
+```go
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func test1() {
+	for i := 0; i < 5; i++ {
+		fmt.Println("test执行", i)
+		time.Sleep(time.Millisecond * 100)
+	}
+}
+
+func main() {
+	// 如果主线程执行的快会出现什么情况？
+	go test1()
+	for i := 0; i < 5; i++ {
+		fmt.Println("main执行", i)
+		time.Sleep(time.Millisecond * 20)
+	}
+}
+```
+
+**输出结果：**
+
+```
+main执行 0
+test执行 0
+main执行 1
+main执行 2
+main执行 3
+main执行 4
+test执行 1
+```
+
+那么他将不会等待协程执行，就会退出执行。
+
+### 5. sync.WaitGroup解决不等待
+
+```go
+package main
+
+import (
+	"fmt"
+	"time"
+	"sync"
+)
+
+var wg sync.WaitGroup
+
+func test2() {
+	for i := 0; i < 5; i++ {
+		fmt.Println("test执行", i)
+		time.Sleep(time.Millisecond * 100)
+	}
+	wg.Done()
+}
+
+func main() {
+	// sync.WaitGroup 完美解决，以后在项目中也会经常使用
+	wg.Add(1)
+	go test2()
+	for i := 0; i < 5; i++ {
+		fmt.Println("main执行", i)
+		time.Sleep(time.Millisecond * 20)
+	}
+	wg.Wait()
+}
+```
+
+**输出结果：**
+
+```
+main执行 0
+test执行 0
+main执行 1
+main执行 2
+main执行 3
+main执行 4
+test执行 1
+test执行 2
+test执行 3
+test执行 4
+```
+
+这样就可以解决主线程执行完毕后，不等待等待协程执行完毕就退出的问题。
+
+### 6. 多协程并发并行执行
+
+```go
+package main
+
+import (
+	"fmt"
+	"time"
+	"sync"
+)
+
+func hello(num int) {
+	defer wg.Done()
+	for i := 0; i < 5; i++ {
+		fmt.Printf("第%v个协程执行--%v\n", num, i)
+	}
+}
+
+func main() {
+	// 多协程并发执行
+	for i := 0; i < 3; i++ {
+		wg.Add(1)
+		go hello(i)
+	}
+	wg.Wait()
+}
+```
+
+**输出结果：**
+
+```
+第2个协程执行--0
+第2个协程执行--1
+第2个协程执行--2
+第2个协程执行--3
+第2个协程执行--4
+第0个协程执行--0
+第0个协程执行--1
+第0个协程执行--2
+第0个协程执行--3
+第0个协程执行--4
+第1个协程执行--0
+第1个协程执行--1
+第1个协程执行--2
+第1个协程执行--3
+第1个协程执行--4
+```
+
+## 五、设置golang运行时占用的cpu核数量（不是很重要）
+
+```go
+package main
+
+import (
+	"fmt"
+	"runtime"
+)
+
+func main() {
+	// 设置程序占用几个cpu进行执行，默认是全部
+	// 获取计算机cpu个数
+	cpuNum := runtime.NumCPU()
+	fmt.Println(cpuNum) // 6 我本机电脑是6核cpu
+
+	// 设置占用cpu个数
+	runtime.GOMAXPROCS(2)
+	fmt.Println("ok")
+}
+```
+
+**输出结果：**
+
+```
+6
+ok
+```
+
+## 总结
+
+通过这篇文章的学习，我们深入了解了：
+
+1. **进程和线程的基本概念**：进程是程序的一次执行过程，线程是进程的执行实例
+2. **并发和并行的区别**：并发是多个任务交替执行，并行是多个任务同时执行
+3. **Goroutine的特点**：轻量级、内存占用小、调度开销低
+4. **Go关键词的使用**：通过go关键字创建协程
+5. **同步机制**：使用sync.WaitGroup确保协程执行完毕
+6. **CPU设置**：通过runtime.GOMAXPROCS设置使用的CPU核心数
+
+这些知识是Go并发编程的基础，掌握好这些概念对于后续学习更高级的并发特性（如channel、select、context等）非常重要。 
