@@ -39,17 +39,15 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.pnpm-store
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('my-blog/pnpm-lock.yaml') }}
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-
           
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-        working-directory: my-blog
         
       - name: Build with Astro
         run: pnpm build
-        working-directory: my-blog
         
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -57,7 +55,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'my-blog/dist'
+          path: 'dist'
 
   deploy:
     environment:
