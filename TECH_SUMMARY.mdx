@@ -1,0 +1,445 @@
+---
+layout: ../../layouts/PostLayout.astro
+title: 我的 Astro 博客折腾记录 —— 从选型到上线的全过程
+date: 2024-12-28
+category: 前端开发
+description: 记录一下用 Astro + TailwindCSS 搭建个人博客的整个过程，包括为啥选 Astro、怎么学的、GitHub Pages 踩坑经历，给想搭博客的朋友一些参考
+tags:
+  - Astro
+  - TailwindCSS
+  - GitHub Pages
+  - 博客搭建
+  - 前端框架
+author: fkxgood
+---
+
+# 我的 Astro 博客折腾记录 —— 从选型到上线的全过程
+
+> 最近花了点时间用 Astro + TailwindCSS 搭了个个人博客，踩了不少坑也学到了很多东西。想着把整个过程记录下来，给想搭博客的朋友一些参考。
+
+## 🤔 为什么选 Astro？和其他框架比了比
+
+一开始我也纠结用什么框架，毕竟现在选择太多了。简单对比了几个主流的：
+
+| 框架 | 用起来咋样 | 有啥问题 | 适合啥场景 |
+|------|----------|----------|-----------|
+| **VuePress** | Vue 全家桶，插件多，文档齐全 | 打包慢，体积大，升级 Vue 3 麻烦 | 写技术文档特别好用 |
+| **VitePress** | 基于 Vite 贼快，Vue 3 原生支持 | 相对比较新，插件少，自定义麻烦 | 现代化文档站点 |
+| **Astro** | 支持多框架，Islands 架构牛逼，几乎零 JS | 学习成本高，生态还在发展，调试有点烦 | 内容站点，对性能要求高的 |
+
+### 最后选 Astro 的几个理由
+
+**🚀 性能真的好**
+```javascript
+// Astro 的 Islands 架构 - 只有需要交互的地方才会加载 JS
+---
+// 这部分是静态的，不会产生 JS
+import Header from '../components/Header.astro';
+import SearchBar from '../components/SearchBar.astro'; // 只有搜索功能需要 JS
+---
+```
+
+**🔧 技术栈很灵活**
+- 想用 React、Vue、Svelte 都行，可以混着用
+- 从静态 HTML 开始，需要交互再加 JS
+- MDX 支持：能在 Markdown 里用 JSX 组件，爽！
+
+**📦 打包结果很干净**
+- 默认输出纯 HTML，几乎没有 JavaScript
+- 自动代码分割和优化
+- Lighthouse 评分轻松满分
+
+## 🎨 学 Astro 的一些心得
+
+### 几个核心概念搞清楚就行
+
+**1. Islands 架构（这个概念挺重要的）**
+```astro
+---
+// 服务端处理数据
+const posts = await Astro.glob('./posts/*.mdx');
+---
+
+<!-- 静态 HTML 部分 -->
+<div class="posts">
+  {posts.map(post => (
+    <article>
+      <h2>{post.frontmatter.title}</h2>
+      <!-- 只有搜索框会在浏览器端激活 -->
+      <SearchBar client:load />
+    </article>
+  ))}
+</div>
+```
+
+**2. 文件路由（超简单）**
+```
+src/pages/
+├── index.astro          # 首页 /
+├── about.astro          # 关于页 /about
+├── categories.astro     # 分类页 /categories
+├── tags.astro          # 标签页 /tags
+├── posts/              # 博客文章 /posts/*
+│   ├── hello-astro.mdx
+│   └── typescript-tips.mdx
+└── search.json.js      # API 接口 /search.json
+```
+
+**3. 组件写法（和 Vue 有点像）**
+```astro
+---
+// 逻辑部分
+interface Props {
+  title: string;
+  category?: string;
+}
+
+const { title, category } = Astro.props;
+---
+
+<!-- 模板部分 -->
+<article class="dark-card">
+  <h2>{title}</h2>
+  {category && <span class="category">{category}</span>}
+</article>
+
+<!-- 样式部分，只作用于这个组件 -->
+<style>
+  .dark-card {
+    background: rgba(0, 0, 0, 0.8);
+    border: 1px solid #10b981;
+  }
+</style>
+```
+
+### 踩过的一些坑
+
+**1. MDX 和数据结合**
+```mdx
+---
+layout: ../../layouts/PostLayout.astro
+title: 我的技术文章
+date: 2024-01-16
+category: 前端
+tags: [React, TypeScript]
+---
+
+# 文章内容
+
+还能在 Markdown 里直接用组件：
+
+<CodeBlock language="python">
+def hello_world():
+    print("Hello, Astro!")
+</CodeBlock>
+```
+
+**2. 数据获取（构建时就处理好了）**
+```javascript
+// 构建的时候就把数据处理好
+const posts = await Astro.glob('./posts/*.mdx');
+const sortedPosts = posts.sort((a, b) => 
+  new Date(b.frontmatter.date) - new Date(a.frontmatter.date)
+);
+
+// 还能做 API 接口
+export async function GET() {
+  const searchIndex = posts.map(post => ({
+    title: post.frontmatter.title,
+    content: post.frontmatter.description,
+    url: post.url
+  }));
+  
+  return new Response(JSON.stringify(searchIndex));
+}
+```
+
+## 🎨 TailwindCSS 用起来真香
+
+### 搭了套自己的设计系统
+
+**颜色主题**
+```javascript
+// tailwind.config.cjs
+module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        'neon-green': '#10b981',    // 主色调，绿色
+        'neon-blue': '#3b82f6',     // 蓝色点缀
+        'neon-red': '#ef4444',      // 红色警告
+        'dark': {
+          50: '#f8fafc',
+          900: '#0f0f0f'
+        }
+      }
+    }
+  }
+}
+```
+
+**组件样式复用**
+```css
+/* global.css - 把常用样式封装成类 */
+@layer components {
+  .dark-card {
+    @apply bg-black/80 backdrop-blur-md border border-gray-700/50 
+           hover:border-neon-green/40 transition-all duration-300;
+  }
+  
+  .neon-text {
+    @apply text-neon-green drop-shadow-lg;
+    text-shadow: 0 0 10px #10b981;  /* 发光效果 */
+  }
+  
+  .dark-btn {
+    @apply bg-neon-green/20 border-2 border-neon-green 
+           text-neon-green hover:bg-neon-green hover:text-black
+           transition-all duration-300 font-semibold;
+  }
+}
+```
+
+### TailwindCSS 的几个好处
+
+**1. 写样式贼快**
+```html
+<!-- 以前的写法 -->
+<div class="hero-section">
+  <h1 class="hero-title">标题</h1>
+</div>
+
+<!-- Tailwind 的写法，直接在 HTML 里搞定 -->
+<div class="py-20 text-center relative">
+  <h1 class="text-6xl font-black neon-text mb-6 animate-slide-up">
+    标题
+  </h1>
+</div>
+```
+
+**2. 响应式超简单**
+```html
+<!-- 手机优先，然后适配更大屏幕 -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  <article class="p-4 md:p-6 lg:p-8">内容</article>
+</div>
+```
+
+**3. 主题切换**
+```javascript
+// 暗色主题切换，几行代码搞定
+function toggleTheme() {
+  const theme = localStorage.getItem('theme') === 'dark' ? 'light' : 'dark';
+  document.documentElement.classList.toggle('dark');
+  localStorage.setItem('theme', theme);
+}
+```
+
+## 🚀 GitHub Pages 部署踩坑记
+
+### 整个部署流程
+
+从本地到线上的流程大概是这样：
+
+```
+本地写代码 → Git Push → GitHub Actions 自动构建 → 部署到 GitHub Pages
+```
+
+### 遇到的坑和解决办法
+
+**第一个坑：路径配置**
+
+❌ **一开始的问题**：部署上去所有链接都 404
+```javascript
+// 错误的配置
+export default defineConfig({
+  site: 'https://fkxgood.github.io/my-blog',
+  // 忘了配置 base，导致路径不对
+});
+```
+
+✅ **解决办法**：加上 base 配置
+```javascript
+// astro.config.mjs
+export default defineConfig({
+  site: 'https://fkxgood.github.io/my-blog',
+  base: '/my-blog',  // 这个很重要！
+  output: 'static',
+});
+```
+
+**第二个坑：GitHub Actions 配置**
+
+一开始各种报错：
+- pnpm 版本不匹配
+- 工作目录找不到
+- 缓存配置有问题
+
+最后搞定的配置：
+```yaml
+# .github/workflows/deploy.yml
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10  # 和本地版本保持一致很重要
+          
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          
+      - name: Cache pnpm dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
+          
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        
+      - name: Build with Astro
+        run: pnpm build
+        
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: 'dist'
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+```
+
+**第三个坑：所有内部链接都要改**
+
+```html
+<!-- 修复前，这些链接都会 404 -->
+<a href="/about">关于</a>
+<a href="/categories">分类</a>
+
+<!-- 修复后，加上 base 路径 -->
+<a href="/my-blog/about">关于</a>
+<a href="/my-blog/categories">分类</a>
+```
+
+### 最终的性能表现
+
+部署完成后看了下性能，还挺满意的：
+
+**Lighthouse 评分**
+- 🚀 Performance: 100/100
+- ♿ Accessibility: 95/100
+- 🔍 SEO: 100/100
+- 💡 Best Practices: 100/100
+
+## 📚 技术栈总结
+
+### 最后选定的技术栈
+
+```json
+{
+  "框架": "Astro 5.0.0",
+  "样式": "TailwindCSS 3.3.2", 
+  "内容": "MDX 4.0.0",
+  "部署": "GitHub Pages + Actions",
+  "包管理": "pnpm 10.13.1",
+  "开发工具": "Cursor + GitHub Copilot"
+}
+```
+
+### 实现的几个功能
+
+**🔍 搜索功能**
+```javascript
+// 用 Fuse.js 做客户端搜索，体验不错
+import Fuse from 'fuse.js';
+
+const fuse = new Fuse(searchData, {
+  keys: ['title', 'content', 'category', 'tags'],
+  threshold: 0.3,
+  ignoreLocation: true,
+});
+```
+
+**🎨 主题切换**
+```javascript
+// 基于 localStorage 的主题记忆
+const theme = localStorage.getItem('theme') || 'dark';
+document.documentElement.classList.toggle('dark', theme === 'dark');
+```
+
+**📱 响应式设计**
+```html
+<!-- 桌面和移动端导航分开处理 -->
+<nav class="hidden md:flex items-center space-x-8">
+  <!-- 桌面端导航 -->
+</nav>
+
+<div class="md:hidden" id="mobile-menu">
+  <!-- 移动端菜单 -->
+</div>
+```
+
+## 🎯 折腾完的一些感受
+
+### 学到的东西
+
+1. **Astro Islands 架构**：这个思路挺新颖的，性能确实好
+2. **TailwindCSS 的便利性**：原子化 CSS 写起来真的快
+3. **MDX 的强大**：Markdown + JSX 的组合很香
+4. **GitHub Actions**：自动化部署省心多了
+
+### 用起来的感受
+
+**好的地方**：
+- 🚀 构建速度快得飞起（Vite 驱动）
+- 📝 写文章体验很好（MDX 支持）
+- 🎨 样式开发效率高（Tailwind 原子化）
+- 🔧 部署完全自动化（GitHub Actions）
+
+**不太爽的地方**：
+- 🐛 调试有时候比较麻烦
+- 📖 Astro 生态相对还是小一些
+- 🔍 TypeScript 需要额外配置
+
+### 几个经验总结
+
+1. **路径配置**：`site` 和 `base` 字段一定要配对
+2. **版本一致性**：本地和 CI 环境的包管理器版本要一样
+3. **渐进式开发**：先把基本功能做好，再加交互
+4. **性能优先**：能用静态的就不要用 JS
+
+## 🤔 总结一下
+
+这次用 Astro 搭博客整体体验还不错，虽然踩了不少坑（主要是部署配置），但最终的效果我还挺满意的。Astro 的 Islands 架构确实是个不错的思路，特别适合做内容网站。
+
+如果你也想搭个人博客，我觉得 Astro 值得试试，特别是如果你：
+- 看重网站性能
+- 喜欢写 Markdown
+- 想要现代化的开发体验
+- 不介意踩点小坑
+
+希望这篇记录对想搭博客的朋友有帮助！有问题可以在下面留言讨论。
+
+> 💡 **小贴士**：选技术栈的时候，性能和开发体验都很重要。Astro 在这两方面平衡得不错。 
