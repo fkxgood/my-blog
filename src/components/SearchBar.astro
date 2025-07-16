@@ -16,7 +16,7 @@
   let fuse;
 
   async function initSearch() {
-    const res = await fetch('/search.json');
+    const res = await fetch('/my-blog/search.json');
     const data = await res.json();
     fuse = new Fuse(data, {
       keys: ['title', 'content', 'category', 'tags'],

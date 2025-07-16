@@ -6,7 +6,7 @@ import LogoIcon from './LogoIcon.astro';
 <header class="bg-black/80 backdrop-blur-md border-b border-neon-green/30 sticky top-0 z-50">
   <div class="max-w-6xl mx-auto px-4 flex items-center justify-between h-16">
     <!-- Logo -->
-    <a href="/" class="flex items-center space-x-3 group">
+    <a href="/my-blog/" class="flex items-center space-x-3 group">
       <div class="w-12 h-12">
         <LogoIcon />
       </div>
@@ -17,16 +17,16 @@ import LogoIcon from './LogoIcon.astro';
     
     <!-- 导航菜单 -->
     <nav class="hidden md:flex items-center space-x-8">
-      <a href="/" class="text-white hover:neon-text transition-all duration-300 font-semibold uppercase tracking-wider text-sm">
+      <a href="/my-blog/" class="text-white hover:neon-text transition-all duration-300 font-semibold uppercase tracking-wider text-sm">
         首页
       </a>
-      <a href="/categories" class="text-white hover:neon-text transition-all duration-300 font-semibold uppercase tracking-wider text-sm">
+      <a href="/my-blog/categories" class="text-white hover:neon-text transition-all duration-300 font-semibold uppercase tracking-wider text-sm">
         分类
       </a>
-      <a href="/tags" class="text-white hover:neon-text transition-all duration-300 font-semibold uppercase tracking-wider text-sm">
+      <a href="/my-blog/tags" class="text-white hover:neon-text transition-all duration-300 font-semibold uppercase tracking-wider text-sm">
         标签
       </a>
-      <a href="/about" class="text-white hover:neon-text transition-all duration-300 font-semibold uppercase tracking-wider text-sm">
+      <a href="/my-blog/about" class="text-white hover:neon-text transition-all duration-300 font-semibold uppercase tracking-wider text-sm">
         关于
       </a>
     </nav>
@@ -48,10 +48,10 @@ import LogoIcon from './LogoIcon.astro';
   <!-- 移动端菜单 -->
   <div class="md:hidden bg-black/90 backdrop-blur-md border-t border-neon-green/30 hidden" id="mobile-menu">
     <div class="px-4 py-6 space-y-4">
-      <a href="/" class="block text-white hover:neon-text transition-all duration-300 py-3 font-semibold uppercase tracking-wider">首页</a>
-      <a href="/categories" class="block text-white hover:neon-text transition-all duration-300 py-3 font-semibold uppercase tracking-wider">分类</a>
-      <a href="/tags" class="block text-white hover:neon-text transition-all duration-300 py-3 font-semibold uppercase tracking-wider">标签</a>
-      <a href="/about" class="block text-white hover:neon-text transition-all duration-300 py-3 font-semibold uppercase tracking-wider">关于</a>
+      <a href="/my-blog/" class="block text-white hover:neon-text transition-all duration-300 py-3 font-semibold uppercase tracking-wider">首页</a>
+      <a href="/my-blog/categories" class="block text-white hover:neon-text transition-all duration-300 py-3 font-semibold uppercase tracking-wider">分类</a>
+      <a href="/my-blog/tags" class="block text-white hover:neon-text transition-all duration-300 py-3 font-semibold uppercase tracking-wider">标签</a>
+      <a href="/my-blog/about" class="block text-white hover:neon-text transition-all duration-300 py-3 font-semibold uppercase tracking-wider">关于</a>
     </div>
   </div>
 </header>
